@@ -2,10 +2,6 @@
 
 _start:
     jal main
-    li a0, 0
-    li a7, 93 # exit
-    ecall
-
 
 main:
     jal read
@@ -35,13 +31,12 @@ main:
 
     add t2, t2, t4
 
-
-loop:
-    # t1 = A, # t2 = B # t3 = A -> MDC # t4 = R # t5 = B 
-    beqz t4, end_loop
     mv t3, t1
     mv t4, t2
     mv t5, t2
+loop:
+    # t1 = A, # t2 = B # t3 = A -> MDC # t4 = R # t5 = B 
+    beqz t4, end_loop
     
     rem t4, t3, t4 # Calcula R e coloca em t4
     mv t3, t5 # Coloca o valor de B antigo no t3
@@ -55,9 +50,40 @@ end_loop:
     div t4, t4, t3
 
     la t0, result
-    sw t4, t0
+    li t3, 10
 
-    a
+    rem t1, t4, t3
+    addi t1, t1, '0'
+    sb t1, 3(t0)
+    div t4, t4, t3
+
+    rem t1, t4, t3
+    addi t1, t1, '0'
+    div t4, t4, t3
+
+    sb t1, 2(t0)
+
+    rem t1, t4, t3
+    addi t1, t1, '0'
+    div t4, t4, t3
+
+    sb t1, 1(t0)
+
+    rem t1, t4, t3
+    addi t1, t1, '0'
+    div t4, t4, t3
+
+    sb t1, 0(t0)
+
+    li t1, '\n'
+
+    sb t1, 4(t0)
+
+    jal write
+
+    li a0, 0
+    li a7, 93 # exit
+    ecall
 
 
 read:
